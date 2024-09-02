@@ -1,50 +1,31 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
+import { Component } from '@angular/core';
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { Product } from '../product';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { ProductService } from '../product.service';
-import { EMPTY, Subscription, catchError } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'pm-product-list',
     templateUrl: './product-list.component.html',
     standalone: true,
-  imports: [NgIf, NgFor, NgClass, ProductDetailComponent]
+  imports: [NgIf, NgFor, NgClass, ProductDetailComponent, AsyncPipe]
 })
-export class ProductListComponent implements OnInit, OnDestroy{
+export class ProductListComponent{
   // Just enough here for the template to compile
   pageTitle = 'Products';
   errorMessage = '';
 
 
-  // Products
-  products: Product[] = [];
-  prodSub!: Subscription
-  constructor(private productSvc: ProductService) {
-        
-  }
-
-
-  ngOnInit(){
-    this.prodSub = this.productSvc.getProducts()
-    .pipe(
-      catchError(err => {
-        this.errorMessage = err;
-        return EMPTY;
-      })
-    )   
-    .subscribe({
-      next: products => {
-        this.products = products 
-        console.log(this.products)
-      }      
+  products$ = this.productSvc.products$
+  .pipe(
+    catchError(err => {
+      this.errorMessage = err;
+      return EMPTY;
     })
-    
-  }
+  );
 
-  ngOnDestroy(){
-    this.prodSub.unsubscribe()
+  constructor(private productSvc: ProductService) {        
   }
 
   // Selected product id to highlight the entry

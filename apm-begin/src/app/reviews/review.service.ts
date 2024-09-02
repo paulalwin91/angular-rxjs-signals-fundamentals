@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../products/product';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Review } from './review';
 
@@ -24,13 +24,5 @@ export class ReviewService {
     return this.reviewsUrl + '?productId=^' + productId + '$';
   }
 
-  getProductReview(product: Product): Observable<Product>{
-    if(product.hasReviews)
-        {
-            this.http.get<Review[]>(this.getReviewUrl(product.id)).subscribe({
-              next: reviews => product.reviews = reviews
-            })
-        }
-        return of(product)
-  }
+
 }
