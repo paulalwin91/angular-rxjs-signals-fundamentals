@@ -14,6 +14,6 @@ export class CartTotalComponent {
   subTotal = 100;
   deliveryFee = 20;
   tax = 10;
-  totalPrice = this.subTotal + this.deliveryFee + this.tax;
+  totalPrice = this.subTotal + this.deliveryFee + this.tax; 
 
 }
